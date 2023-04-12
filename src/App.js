@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
-import { useQuery, gql } from '@apollo/client';
-import Product from './components/Product';
+import React, { useState } from 'react';
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
 import './App.css';
+import Product from './components/Product';
 
 const GET_PRODUCTS = gql`
   query GetProducts($category: String) {
@@ -19,23 +20,25 @@ const GET_PRODUCTS = gql`
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { loading, error, data } = useQuery(GET_PRODUCTS, {
+  const { loading, error, data, refetch } = useQuery(GET_PRODUCTS, {
     variables: { category: selectedCategory },
   });
 
+  const handleButtonClick = (category) => {
+    setSelectedCategory(category);
+    refetch({ category });
+  };
+
   if (loading) return <p>Loading...</p>;
-  if (error) {
-    console.error(error);
-    return <p>Error :(</p>;
-  }
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className="App">
       <h1>Product Catalog</h1>
       <div className="filters">
-        <button onClick={() => setSelectedCategory(null)}>All</button>
-        <button onClick={() => setSelectedCategory('Hot')}>Hot</button>
-        <button onClick={() => setSelectedCategory('Iced')}>Iced</button>
+        <button onClick={() => handleButtonClick(null)}>All</button>
+        <button onClick={() => handleButtonClick('Hot')}>Hot</button>
+        <button onClick={() => handleButtonClick('Iced')}>Iced</button>
       </div>
       <div className="products">
         {data && data.coffees.map((product) => (
@@ -43,7 +46,7 @@ function App() {
         ))}
       </div>
     </div>
-  );  
+  );
 }
 
 export default App;
