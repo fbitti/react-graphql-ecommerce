@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
 const httpLink = new HttpLink({
-  uri: "https://graphql-coffee-api-2.glitch.me/graphql",
+  uri: "https://graphql-coffee-api-3.glitch.me/graphql",
 });
 
 const client = new ApolloClient({

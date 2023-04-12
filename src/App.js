@@ -1,50 +1,58 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
-import './App.css';
-import Product from './components/Product';
-
-const GET_PRODUCTS = gql`
-  query GetProducts($category: String) {
-    coffees(category: $category) {
-      id
-      title
-      description
-      ingredients
-      category
-      price
-      image
-    }
-  }
-`;
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Catalog from './components/Catalog';
+import Login from './components/Login';
+import Cart from './components/Cart';
+import UserContext from './UserContext';
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const { loading, error, data, refetch } = useQuery(GET_PRODUCTS, {
-    variables: { category: selectedCategory },
-  });
+  const [user, setUser] = useState(null);
 
-  const handleButtonClick = (category) => {
-    setSelectedCategory(category);
-    refetch({ category });
+  const handleLogin = (loggedInUser) => {
+    setUser(loggedInUser);
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className="App">
-      <h1>Product Catalog</h1>
-      <div className="filters">
-        <button onClick={() => handleButtonClick(null)}>All</button>
-        <button onClick={() => handleButtonClick('Hot')}>Hot</button>
-        <button onClick={() => handleButtonClick('Iced')}>Iced</button>
-      </div>
-      <div className="products">
-        {data && data.coffees.map((product) => (
-          <Product key={product.id} product={product} />
-        ))}
-      </div>
+      <Router>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Catalog</Link>
+            </li>
+            {!user && (
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+            )}
+            {user && (
+              <li>
+                <Link to="/cart">Cart</Link>
+              </li>
+            )}
+          </ul>
+        </nav>
+        <UserContext.Provider value={user}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                user ? (
+                  <Catalog />
+                ) : (
+                  <Login onLogin={(loggedInUser) => handleLogin(loggedInUser)} />
+                )
+              }
+            />
+            {user && (
+              <Route path="/cart" element={<Cart userId={user.id} />} />
+            )}
+            {!user && (
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            )}
+          </Routes>
+        </UserContext.Provider>
+      </Router>
     </div>
   );
 }
