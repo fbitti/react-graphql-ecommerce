@@ -34,21 +34,10 @@ function App() {
         </nav>
         <UserContext.Provider value={user}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                user ? (
-                  <Catalog />
-                ) : (
-                  <Login onLogin={(loggedInUser) => handleLogin(loggedInUser)} />
-                )
-              }
-            />
+            <Route path="/" element={<Catalog />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
             {user && (
-              <Route path="/cart" element={<Cart userId={user.id} />} />
-            )}
-            {!user && (
-              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/cart" element={<Cart userId={user.id} userName={user.name} />} />
             )}
           </Routes>
         </UserContext.Provider>

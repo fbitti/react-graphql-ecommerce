@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -22,10 +23,14 @@ const Login = ({ onLogin }) => {
     try {
       const { data } = await login({ variables: { username, password } });
       onLogin(data.login);
+      navigate('/'); // Redirect to the catalog
     } catch (error) {
       console.error('Error logging in:', error);
+      // The error message will be displayed, and the user will stay on the login page
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="Login">

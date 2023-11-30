@@ -11,6 +11,17 @@ const ADD_TO_CART = gql`
   }
 `;
 
+const GET_CART = gql`
+  query GetCart($userId: ID!) {
+    cart(userId: $userId) {
+      id
+      title
+      price
+      quantity
+    }
+  }
+`;
+
 function Product({ product, user }) {
   const [addToCart, { error }] = useMutation(ADD_TO_CART);
 
@@ -19,11 +30,15 @@ function Product({ product, user }) {
       alert('Please login to add items to your cart');
       return;
     }
-
+  
     try {
+      console.log("Adding to cart:", product.id);
+
       await addToCart({
         variables: { userId: user.id, productId: product.id, quantity: 1 },
+        refetchQueries: user ? [{ query: GET_CART, variables: { userId: user.id } }] : [],
       });
+      // Additional logic if needed after successful addition
     } catch (e) {
       console.error('Error adding to cart:', e.message);
     }
