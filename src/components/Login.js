@@ -22,6 +22,11 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     try {
       const { data } = await login({ variables: { username, password } });
+      
+      // Save user data to local storage
+      localStorage.setItem('user', JSON.stringify(data.login));
+
+      // Call onLogin and navigate
       onLogin(data.login);
       navigate('/'); // Redirect to the catalog
     } catch (error) {

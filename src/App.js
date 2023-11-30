@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Catalog from './components/Catalog';
 import Login from './components/Login';
@@ -8,8 +8,23 @@ import UserContext from './UserContext';
 function App() {
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    // Check for user data in local storage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
   const handleLogin = (loggedInUser) => {
     setUser(loggedInUser);
+  };
+
+  const handleLogout = () => {
+    // Remove user data from local storage
+    localStorage.removeItem('user');
+    // Reset user in state
+    setUser(null);
   };
 
   return (
@@ -18,17 +33,22 @@ function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Catalog</Link>
+              <Link to="/">Home</Link>
             </li>
-            {!user && (
+            {!user ? (
               <li>
                 <Link to="/login">Login</Link>
               </li>
-            )}
-            {user && (
-              <li>
-                <Link to="/cart">Cart</Link>
-              </li>
+            ) :
+            (
+              <div>
+                <li>
+                  <Link to="/cart">Cart</Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout}>Logout</button>
+                </li>
+              </div>
             )}
           </ul>
         </nav>
