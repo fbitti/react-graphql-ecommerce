@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
 import Catalog from './components/Catalog';
 import Login from './components/Login';
 import Cart from './components/Cart';
 import UserContext from './UserContext';
+import { AppBar, Toolbar, Typography, Button, Link } from '@mui/material';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,31 +28,34 @@ function App() {
     setUser(null);
   };
 
+
   return (
     <div className="App">
       <Router>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              My E-Commerce Site
+            </Typography>
+            <Link component={NavLink} to="/" color="inherit">
+              Home
+            </Link>
             {!user ? (
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            ) :
-            (
+              <Button color="inherit" component={NavLink} to="/login">
+                Login
+              </Button>
+            ) : (
               <div>
-                <li>
-                  <Link to="/cart">Cart</Link>
-                </li>
-                <li>
-                  <button onClick={handleLogout}>Logout</button>
-                </li>
+                <Button color="inherit" component={NavLink} to="/cart">
+                  Cart
+                </Button>
+                <Button color="inherit" onClick={handleLogout}>
+                  Logout
+                </Button>
               </div>
             )}
-          </ul>
-        </nav>
+          </Toolbar>
+        </AppBar>
         <UserContext.Provider value={user}>
           <Routes>
             <Route path="/" element={<Catalog />} />
