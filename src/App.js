@@ -35,7 +35,7 @@ function App() {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              My E-Commerce Site
+              GraphQL E-Commerce Site
             </Typography>
             <Link component={NavLink} to="/" color="inherit">
               Home

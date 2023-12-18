@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import UserContext from '../UserContext';
-import Product from './Product'; 
+import Product from './Product';
+import { Grid, Button, Typography } from '@mui/material';
 
 const GET_COFFEES = gql`
   query GetCoffees($category: String) {
@@ -21,22 +22,24 @@ function Catalog() {
   const user = useContext(UserContext);
   const { loading, error, data, refetch } = useQuery(GET_COFFEES);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error :(</Typography>;
 
   const products = data.coffees;
 
   return (
     <div>
-      <h1>Welcome, {user ? user.name : 'Guest'}</h1>
-      <button onClick={() => refetch({ category: '' })}>All</button>
-      <button onClick={() => refetch({ category: 'Hot' })}>Hot</button>
-      <button onClick={() => refetch({ category: 'Iced' })}>Iced</button>
-      <div className="products-list">
+      <Typography variant="h4" gutterBottom>Welcome, {user ? user.name : 'Guest'}</Typography>
+      <Button onClick={() => refetch({ category: '' })}>All</Button>
+      <Button onClick={() => refetch({ category: 'Hot' })}>Hot</Button>
+      <Button onClick={() => refetch({ category: 'Iced' })}>Iced</Button>
+      <Grid container spacing={2} justifyContent="center">
         {products.map((product) => (
-          <Product key={product.id} product={product} user={user} />
+          <Grid item key={product.id} xs={12} sm={6} md={4}>
+            <Product product={product} user={user} />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </div>
   );
 }

@@ -1,5 +1,9 @@
 import React from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
+import { List, ListItem, ListItemText, IconButton, Typography, Divider } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const GET_CART = gql`
   query GetCart($userId: ID!) {
@@ -48,30 +52,35 @@ function Cart({ userId, userName }) {
     removeCartItem({ variables: { userId, productId } })
       .then(() => refetch());
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
+  
   const cartItems = data.cart;
   console.log("Cart items:", cartItems);
 
-  // Calculate the total cost
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography color="error">Error: {error.message}</Typography>;
+
   const totalCost = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <div>
-      <h1>{userName}'s Shopping Cart</h1>
-      <ul>
+      <Typography variant="h4" gutterBottom>{userName}'s Shopping Cart</Typography>
+      <List>
         {cartItems.map((item) => (
-          <li key={item.id}>
-            {item.title} - ${item.price} x {item.quantity} = ${(item.price * item.quantity).toFixed(2)}
-            <button onClick={() => changeItemQuantity(item.id, item.quantity + 1)}>+1</button>
-            <button onClick={() => changeItemQuantity(item.id, item.quantity - 1)}>-1</button>
-            <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
-          </li>
+          <ListItem key={item.id} divider>
+            <ListItemText primary={`${item.title} - $${item.price}`} secondary={`Quantity: ${item.quantity}`} />
+            <IconButton onClick={() => changeItemQuantity(item.id, item.quantity + 1)}>
+              <AddCircleOutlineIcon />
+            </IconButton>
+            <IconButton onClick={() => changeItemQuantity(item.id, item.quantity - 1)}>
+              <RemoveCircleOutlineIcon />
+            </IconButton>
+            <IconButton onClick={() => handleRemoveItem(item.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItem>
         ))}
-      </ul>
-      <ul>Total = ${totalCost.toFixed(2)}</ul>
+      </List>
+      <Typography variant="h6">Total = ${totalCost.toFixed(2)}</Typography>
     </div>
   );
 }

@@ -1,7 +1,7 @@
-// src/Product.js
 import React from 'react';
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
+import { Card, CardMedia, CardContent, CardActions, Typography, Button } from '@mui/material';
 
 const ADD_TO_CART = gql`
   mutation AddToCart($userId: ID!, $productId: ID!, $quantity: Int!) {
@@ -45,15 +45,32 @@ function Product({ product, user }) {
   };
 
   return (
-    <div className="product">
-      <img src={product.image} alt={product.title} />
-      <h2>{product.title}</h2>
-      <p>{product.description}</p>
-      <p>Ingredients: {product.ingredients.join(', ')}</p>
-      <p>Price: ${product.price}</p>
-      <button onClick={handleAddToCart}>+</button>
-      {error && <p>Error: {error.message}</p>}
-    </div>
+    <Card>
+      <CardMedia
+        component="img"
+        height="140"
+        image={product.image}
+        alt={product.title}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {product.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {product.description}
+        </Typography>
+        <Typography variant="body2">
+          Ingredients: {product.ingredients.join(', ')}
+        </Typography>
+        <Typography variant="body1">
+          Price: ${product.price}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={handleAddToCart}>Add to Cart</Button>
+      </CardActions>
+      {error && <Typography color="error">Error: {error.message}</Typography>}
+    </Card>
   );
 }
 

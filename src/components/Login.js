@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import { TextField, Button, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const LOGIN_MUTATION = gql`
@@ -38,33 +39,32 @@ const Login = ({ onLogin }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="Login">
-      <h2>Login</h2>
+    <Paper style={{ padding: 16, maxWidth: 400, margin: "auto" }}>
+      <Typography variant="h4" gutterBottom>Login</Typography>
       <form onSubmit={handleLoginSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit" disabled={loading}>
+        <TextField
+          label="Username"
+          fullWidth
+          margin="normal"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          fullWidth
+          margin="normal"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit" variant="contained" color="primary" disabled={loading}>
           Login
-        </button>
+        </Button>
       </form>
-      {error && <p>Error logging in. Please try again.</p>}
-    </div>
+      {error && <Typography color="error">Error logging in. Please try again.</Typography>}
+    </Paper>
   );
 };
 
