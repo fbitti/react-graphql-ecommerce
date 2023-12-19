@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import UserContext from '../UserContext';
 import Product from './Product';
-import { Grid, Button, Typography } from '@mui/material';
+import { Typography, ToggleButtonGroup, ToggleButton, Grid } from '@mui/material';
 
 const GET_COFFEES = gql`
   query GetCoffees($category: String) {
@@ -21,7 +21,15 @@ const GET_COFFEES = gql`
 function Catalog() {
   const user = useContext(UserContext);
   const { loading, error, data, refetch } = useQuery(GET_COFFEES);
+  const [category, setCategory] = useState(''); // State to track the selected category
 
+  const handleCategoryChange = (event, newCategory) => {
+    if (newCategory !== null) { // Avoid deselecting all buttons
+      setCategory(newCategory);
+      refetch({ category: newCategory });
+    }
+  };
+  
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>Error :(</Typography>;
 
@@ -29,10 +37,22 @@ function Catalog() {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>Welcome, {user ? user.name : 'Guest'}</Typography>
-      <Button onClick={() => refetch({ category: '' })}>All</Button>
-      <Button onClick={() => refetch({ category: 'Hot' })}>Hot</Button>
-      <Button onClick={() => refetch({ category: 'Iced' })}>Iced</Button>
+      <ToggleButtonGroup
+        value={category}
+        exclusive
+        onChange={handleCategoryChange}
+        aria-label="Category"
+      >
+        <ToggleButton value="" aria-label="All">
+          All
+        </ToggleButton>
+        <ToggleButton value="Hot" aria-label="Hot">
+          Hot
+        </ToggleButton>
+        <ToggleButton value="Iced" aria-label="Iced">
+          Iced
+        </ToggleButton>
+      </ToggleButtonGroup>
       <Grid container spacing={2} justifyContent="center">
         {products.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>

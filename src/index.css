@@ -24,3 +24,8 @@ button {
 }
 
 /* Utility Classes - You can add utility classes for spacing, alignment, etc., if needed */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* This will make all cards in a flex container take equal height */
+}

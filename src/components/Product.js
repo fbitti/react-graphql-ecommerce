@@ -45,12 +45,16 @@ function Product({ product, user }) {
   };
 
   return (
-    <Card>
+    <Card className="product-card">
       <CardMedia
         component="img"
-        height="140"
         image={product.image}
         alt={product.title}
+        style={{
+          height: 'auto', // Adjust height automatically
+          width: '100%', // Full width of the card
+          aspectRatio: '10 / 8' // Width to height ratio
+        }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -63,11 +67,18 @@ function Product({ product, user }) {
           Ingredients: {product.ingredients.join(', ')}
         </Typography>
         <Typography variant="body1">
-          Price: ${product.price}
+          Price: ${Number(product.price).toFixed(2)}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small" onClick={handleAddToCart}>Add to Cart</Button>
+      <CardActions style={{ justifyContent: 'center', marginTop: 'auto' }}>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={handleAddToCart}
+          style={{ width: '40%' }} // Adjust the width as needed
+        >
+          Add to Cart
+        </Button>
       </CardActions>
       {error && <Typography color="error">Error: {error.message}</Typography>}
     </Card>

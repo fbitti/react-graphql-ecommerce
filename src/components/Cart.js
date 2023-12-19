@@ -34,8 +34,9 @@ const REMOVE_CART_ITEM = gql`
 function Cart({ userId, userName }) {
   const { loading, error, data, refetch } = useQuery(GET_CART, {
     variables: { userId },
+    skip: !userId, // Skip the query if userId is not available
   });
-
+  
   // Define useMutation hooks
   const [updateCartItem] = useMutation(UPDATE_CART_ITEM);
   const [removeCartItem] = useMutation(REMOVE_CART_ITEM);
@@ -53,21 +54,26 @@ function Cart({ userId, userName }) {
       .then(() => refetch());
   };
   
-  const cartItems = data.cart;
-  console.log("Cart items:", cartItems);
-
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
 
+  // Safely access cartItems
+  const cartItems = data && data.cart ? data.cart : [];
+  console.log("Cart items:", cartItems);
+
+  // Calculate the total cost
   const totalCost = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>{userName}'s Shopping Cart</Typography>
-      <List>
-        {cartItems.map((item) => (
-          <ListItem key={item.id} divider>
-            <ListItemText primary={`${item.title} - $${item.price}`} secondary={`Quantity: ${item.quantity}`} />
+    <Typography variant="h4" gutterBottom>{userName}'s Shopping Cart</Typography>
+    <List>
+      {cartItems.map((item) => (
+        <ListItem key={item.id} divider>
+          <ListItemText 
+            primary={`${item.title} - $${item.price.toFixed(2)}`} 
+            secondary={`Quantity: ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`}
+          />
             <IconButton onClick={() => changeItemQuantity(item.id, item.quantity + 1)}>
               <AddCircleOutlineIcon />
             </IconButton>

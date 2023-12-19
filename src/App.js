@@ -4,7 +4,7 @@ import Catalog from './components/Catalog';
 import Login from './components/Login';
 import Cart from './components/Cart';
 import UserContext from './UserContext';
-import { AppBar, Toolbar, Typography, Button, Link } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +28,6 @@ function App() {
     setUser(null);
   };
 
-
   return (
     <div className="App">
       <Router>
@@ -37,22 +36,25 @@ function App() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               GraphQL E-Commerce Site
             </Typography>
-            <Link component={NavLink} to="/" color="inherit">
+            <Button component={NavLink} to="/" color="inherit">
               Home
-            </Link>
+            </Button>
             {!user ? (
               <Button color="inherit" component={NavLink} to="/login">
                 Login
               </Button>
             ) : (
-              <div>
+              <React.Fragment>
+                <Typography variant="subtitle1" component="div" sx={{ marginLeft: 2, marginRight: 2 }}>
+                  Welcome, {user.name}
+                </Typography>
                 <Button color="inherit" component={NavLink} to="/cart">
                   Cart
                 </Button>
                 <Button color="inherit" onClick={handleLogout}>
                   Logout
                 </Button>
-              </div>
+              </React.Fragment>
             )}
           </Toolbar>
         </AppBar>
