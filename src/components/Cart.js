@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import { List, ListItem, ListItemText, IconButton, Typography, Divider } from '@mui/material';
+import { List, ListItem, ListItemText, IconButton, Typography } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
